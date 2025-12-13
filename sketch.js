@@ -202,7 +202,8 @@ class RotaryKnob {
         if (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
         if (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
         
-        this.currentRotation += deltaAngle;
+        // 감도 조절 (0.7배로 낮춤)
+        this.currentRotation += deltaAngle * 0.7;
         this.lastAngle = angle;
         
         // 회전을 값으로 변환 (-135도 ~ 135도 = 270도 범위)
