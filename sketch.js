@@ -107,7 +107,7 @@ function setupCustomGUI() {
 }
 
 function draw() {
-  background(30);
+  background(0);
   for (let p of particles) {
     p.update();
     p.show();
