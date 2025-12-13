@@ -96,17 +96,17 @@ body {
 }
 
 .knob-indicator {
-  width: 4px;
-  height: 28px;
+  width: 8px;
+  height: 8px;
   background: #fff;
-  border-radius: 2px;
+  border-radius: 50%;
   position: absolute;
-  top: 8px;
+  top: 12px;
   left: 50%;
-  transform-origin: center 27px;
+  transform-origin: center 23px;
   transform: translateX(-50%) rotate(-135deg);
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  transition: transform 0.05s ease-out;
+  transition: transform 0.1s ease-out;
   pointer-events: none;
 }
 
