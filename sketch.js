@@ -28,7 +28,7 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(windowWidth - 350, windowHeight);
+  let canvas = createCanvas(windowWidth - 175, windowHeight);
   canvas.parent('canvas-container');
   textAlign(CENTER, CENTER);
   
@@ -64,60 +64,37 @@ function setup() {
 }
 
 function setupCustomGUI() {
-  // Small Particle
-  let smallSlider = select('#sizeSmall');
-  smallSlider.input(() => {
-    guiSettings.sizeSmall = parseFloat(smallSlider.value());
-    select('#sizeSmallValue').html(guiSettings.sizeSmall);
+  // 각 노브 설정
+  new RotaryKnob('sizeSmall', 1, 20, 3, (val) => {
+    guiSettings.sizeSmall = val;
   });
   
-  // Large Particle
-  let largeSlider = select('#sizeLarge');
-  largeSlider.input(() => {
-    guiSettings.sizeLarge = parseFloat(largeSlider.value());
-    select('#sizeLargeValue').html(guiSettings.sizeLarge);
+  new RotaryKnob('sizeLarge', 2, 50, 6, (val) => {
+    guiSettings.sizeLarge = val;
   });
   
-  // Near Distance
-  let nearDistSlider = select('#nearDist');
-  nearDistSlider.input(() => {
-    settings.nearDist = parseFloat(nearDistSlider.value());
-    select('#nearDistValue').html(settings.nearDist);
+  new RotaryKnob('nearDist', 50, 200, 100, (val) => {
+    settings.nearDist = val;
   });
   
-  // Mid Distance
-  let midDistSlider = select('#midDist');
-  midDistSlider.input(() => {
-    settings.midDist = parseFloat(midDistSlider.value());
-    select('#midDistValue').html(settings.midDist);
+  new RotaryKnob('midDist', 150, 400, 250, (val) => {
+    settings.midDist = val;
   });
   
-  // Near Force
-  let nearForceSlider = select('#forceNear');
-  nearForceSlider.input(() => {
-    settings.forceNear = parseFloat(nearForceSlider.value());
-    select('#forceNearValue').html(settings.forceNear);
+  new RotaryKnob('forceNear', 1, 10, 6, (val) => {
+    settings.forceNear = val;
   });
   
-  // Mid Restoring
-  let midForceSlider = select('#forceMid');
-  midForceSlider.input(() => {
-    settings.forceMid = parseFloat(midForceSlider.value());
-    select('#forceMidValue').html(settings.forceMid);
+  new RotaryKnob('forceMid', 0.01, 0.2, 0.05, (val) => {
+    settings.forceMid = val;
   });
   
-  // Text Spread
-  let spreadSlider = select('#textSpread');
-  spreadSlider.input(() => {
-    guiSettings.textSpread = parseFloat(spreadSlider.value());
-    select('#textSpreadValue').html(guiSettings.textSpread);
+  new RotaryKnob('textSpread', 0, 1, 0, (val) => {
+    guiSettings.textSpread = val;
   });
   
-  // Movement Speed
-  let moveSlider = select('#moveForce');
-  moveSlider.input(() => {
-    guiSettings.moveForce = parseFloat(moveSlider.value());
-    select('#moveForceValue').html(guiSettings.moveForce);
+  new RotaryKnob('moveForce', 0.01, 0.2, 0.05, (val) => {
+    guiSettings.moveForce = val;
   });
 }
 
@@ -130,7 +107,7 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth - 350, windowHeight);
+  resizeCanvas(windowWidth - 175, windowHeight);
 }
 
 class Particle {
@@ -172,3 +149,9 @@ class Particle {
     }
   }
 }
+
+// 회전 노브 클래스
+class RotaryKnob {
+  constructor(id, min, max, initialValue, callback) {
+    this.id = id;
+    this
