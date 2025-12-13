@@ -28,7 +28,7 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(windowWidth - 175, windowHeight);
+  let canvas = createCanvas(windowWidth - 250, windowHeight);
   canvas.parent('canvas-container');
   textAlign(CENTER, CENTER);
   
@@ -107,7 +107,7 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth - 175, windowHeight);
+  resizeCanvas(windowWidth - 250, windowHeight);
 }
 
 class Particle {
@@ -154,4 +154,74 @@ class Particle {
 class RotaryKnob {
   constructor(id, min, max, initialValue, callback) {
     this.id = id;
-    this
+    this.min = min;
+    this.max = max;
+    this.value = initialValue;
+    this.callback = callback;
+    
+    this.knob = document.getElementById(id);
+    this.valueDisplay = document.getElementById(id + 'Value');
+    this.indicator = this.knob.querySelector('.knob-indicator');
+    
+    this.isDragging = false;
+    this.startY = 0;
+    this.startValue = this.value;
+    
+    this.updateDisplay();
+    this.attachEvents();
+  }
+  
+  attachEvents() {
+    this.knob.addEventListener('mousedown', (e) => {
+      this.isDragging = true;
+      this.startY = e.clientY;
+      this.startValue = this.value;
+      e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (this.isDragging) {
+        const deltaY = this.startY - e.clientY;
+        const sensitivity = (this.max - this.min) / 200;
+        let newValue = this.startValue + (deltaY * sensitivity);
+        newValue = Math.max(this.min, Math.min(this.max, newValue));
+        
+        this.value = newValue;
+        this.updateDisplay();
+        this.callback(this.value);
+      }
+    });
+    
+    document.addEventListener('mouseup', () => {
+      this.isDragging = false;
+    });
+    
+    // 더블클릭으로 리셋
+    this.knob.addEventListener('dblclick', () => {
+      this.value = this.startValue;
+      this.updateDisplay();
+      this.callback(this.value);
+    });
+  }
+  
+  updateDisplay() {
+    // 값의 비율 계산 (0~1)
+    const ratio = (this.value - this.min) / (this.max - this.min);
+    // -135도에서 135도로 회전 (270도 범위)
+    const rotation = -135 + (ratio * 270);
+    
+    this.indicator.style.transform = `rotate(${rotation}deg)`;
+    
+    // 값 표시 (소수점 처리)
+    let displayValue = this.value;
+    if (this.max - this.min <= 1) {
+      displayValue = this.value.toFixed(2);
+    } else if (this.max - this.min <= 10) {
+      displayValue = this.value.toFixed(1);
+    } else {
+      displayValue = Math.round(this.value);
+    }
+    
+    this.valueDisplay.textContent = displayValue;
+  }
+}
