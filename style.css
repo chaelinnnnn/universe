@@ -9,6 +9,7 @@ body {
   background: #1a1a1a;
   color: #fff;
   overflow: hidden;
+  user-select: none;
 }
 
 .container {
@@ -21,47 +22,47 @@ body {
 }
 
 .control-panel {
-  width: 350px;
+  width: 175px;
   background: #f5f5f5;
   color: #333;
-  padding: 30px;
+  padding: 15px;
   overflow-y: auto;
   box-shadow: -4px 0 12px rgba(0,0,0,0.1);
 }
 
 .panel-header {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .panel-header h2 {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 300;
   letter-spacing: -0.5px;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .subtitle {
-  font-size: 12px;
+  font-size: 10px;
   color: #999;
   font-weight: 300;
 }
 
 .control-group {
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 }
 
 .control-group h3 {
-  font-size: 11px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   color: #666;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   font-weight: 500;
 }
 
 .knob-row {
   display: flex;
-  gap: 30px;
+  gap: 12px;
 }
 
 .knob-container {
@@ -72,53 +73,47 @@ body {
 }
 
 .knob {
-  width: 80px;
-  height: 80px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   background: #4a4a4a;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   position: relative;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
 }
 
-.knob input[type="range"] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border-radius: 50%;
-  cursor: pointer;
+.knob:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.knob:active {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.knob-indicator {
+  width: 3px;
+  height: 24px;
+  background: #fff;
+  border-radius: 2px;
   position: absolute;
-}
-
-.knob input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 6px;
-  height: 30px;
-  background: #fff;
-  border-radius: 3px;
-  cursor: pointer;
+  top: 6px;
+  left: 50%;
+  transform-origin: center 21px;
+  transform: translateX(-50%) rotate(-135deg);
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.knob input[type="range"]::-moz-range-thumb {
-  width: 6px;
-  height: 30px;
-  background: #fff;
-  border-radius: 3px;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transition: transform 0.05s ease-out;
 }
 
 .knob-container label {
-  font-size: 11px;
+  font-size: 9px;
   text-align: center;
   color: #666;
-  line-height: 1.4;
+  line-height: 1.3;
   font-weight: 400;
 }
 
@@ -127,4 +122,5 @@ body {
   color: #333;
   font-weight: 600;
   margin-top: 2px;
+  font-size: 10px;
 }
