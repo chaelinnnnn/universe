@@ -64,38 +64,46 @@ function setup() {
 }
 
 function setupCustomGUI() {
-  // 각 노브 설정
+  // 각 노브 설정 (초기값 저장)
   new RotaryKnob('sizeSmall', 1, 20, 3, (val) => {
     guiSettings.sizeSmall = val;
   });
+  document.getElementById('sizeSmall').dataset.initial = 3;
   
   new RotaryKnob('sizeLarge', 2, 50, 6, (val) => {
     guiSettings.sizeLarge = val;
   });
+  document.getElementById('sizeLarge').dataset.initial = 6;
   
   new RotaryKnob('nearDist', 50, 200, 100, (val) => {
     settings.nearDist = val;
   });
+  document.getElementById('nearDist').dataset.initial = 100;
   
   new RotaryKnob('midDist', 150, 400, 250, (val) => {
     settings.midDist = val;
   });
+  document.getElementById('midDist').dataset.initial = 250;
   
   new RotaryKnob('forceNear', 1, 10, 6, (val) => {
     settings.forceNear = val;
   });
+  document.getElementById('forceNear').dataset.initial = 6;
   
   new RotaryKnob('forceMid', 0.01, 0.2, 0.05, (val) => {
     settings.forceMid = val;
   });
+  document.getElementById('forceMid').dataset.initial = 0.05;
   
   new RotaryKnob('textSpread', 0, 1, 0, (val) => {
     guiSettings.textSpread = val;
   });
+  document.getElementById('textSpread').dataset.initial = 0;
   
   new RotaryKnob('moveForce', 0.01, 0.2, 0.05, (val) => {
     guiSettings.moveForce = val;
   });
+  document.getElementById('moveForce').dataset.initial = 0.05;
 }
 
 function draw() {
@@ -164,8 +172,8 @@ class RotaryKnob {
     this.indicator = this.knob.querySelector('.knob-indicator');
     
     this.isDragging = false;
-    this.startY = 0;
-    this.startValue = this.value;
+    this.lastAngle = 0;
+    this.currentRotation = 0;
     
     this.updateDisplay();
     this.attachEvents();
@@ -174,19 +182,43 @@ class RotaryKnob {
   attachEvents() {
     this.knob.addEventListener('mousedown', (e) => {
       this.isDragging = true;
-      this.startY = e.clientY;
-      this.startValue = this.value;
+      const rect = this.knob.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      this.lastAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
       e.preventDefault();
     });
     
     document.addEventListener('mousemove', (e) => {
       if (this.isDragging) {
-        const deltaY = this.startY - e.clientY;
-        const sensitivity = (this.max - this.min) / 200;
-        let newValue = this.startValue + (deltaY * sensitivity);
-        newValue = Math.max(this.min, Math.min(this.max, newValue));
+        const rect = this.knob.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
         
-        this.value = newValue;
+        const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+        let deltaAngle = angle - this.lastAngle;
+        
+        // 360도 넘어갈 때 처리
+        if (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
+        if (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
+        
+        this.currentRotation += deltaAngle;
+        this.lastAngle = angle;
+        
+        // 회전을 값으로 변환 (-135도 ~ 135도 = 270도 범위)
+        const minRotation = -135 * Math.PI / 180;
+        const maxRotation = 135 * Math.PI / 180;
+        const totalRotation = maxRotation - minRotation;
+        
+        // 현재 회전을 범위 내로 제한
+        let normalizedRotation = this.currentRotation;
+        normalizedRotation = Math.max(minRotation, Math.min(maxRotation, normalizedRotation));
+        this.currentRotation = normalizedRotation;
+        
+        // 값 계산
+        const ratio = (normalizedRotation - minRotation) / totalRotation;
+        this.value = this.min + ratio * (this.max - this.min);
+        
         this.updateDisplay();
         this.callback(this.value);
       }
@@ -198,7 +230,10 @@ class RotaryKnob {
     
     // 더블클릭으로 리셋
     this.knob.addEventListener('dblclick', () => {
-      this.value = this.startValue;
+      const initialValue = parseFloat(this.knob.dataset.initial || this.value);
+      this.value = initialValue;
+      const ratio = (this.value - this.min) / (this.max - this.min);
+      this.currentRotation = (-135 + ratio * 270) * Math.PI / 180;
       this.updateDisplay();
       this.callback(this.value);
     });
