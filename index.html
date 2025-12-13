@@ -1,17 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>p5.js + dat.GUI Example</title>
-
-    <!-- p5.js 불러오기 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-
-    <!-- dat.gui 불러오기 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
-
-    <!-- 내 스케치 -->
-    <script src="sketch.js"></script>
-  </head>
-  <body></body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Particle Text Interactive</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="canvas-container"></div>
+    
+    <div class="control-panel">
+      <div class="panel-header">
+        <h2>particle controls</h2>
+        <p class="subtitle">by You</p>
+      </div>
+      
+      <div class="control-group">
+        <h3>Particle Size</h3>
+        <div class="knob-row">
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="sizeSmall" min="1" max="20" step="1" value="3" orient="vertical">
+            </div>
+            <label>Small<br><span id="sizeSmallValue">3</span></label>
+          </div>
+          
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="sizeLarge" min="2" max="50" step="1" value="6" orient="vertical">
+            </div>
+            <label>Large<br><span id="sizeLargeValue">6</span></label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <h3>Reaction Distance</h3>
+        <div class="knob-row">
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="nearDist" min="50" max="200" step="1" value="100" orient="vertical">
+            </div>
+            <label>Near<br><span id="nearDistValue">100</span></label>
+          </div>
+          
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="midDist" min="150" max="400" step="1" value="250" orient="vertical">
+            </div>
+            <label>Mid<br><span id="midDistValue">250</span></label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <h3>Force Settings</h3>
+        <div class="knob-row">
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="forceNear" min="1" max="10" step="0.1" value="6" orient="vertical">
+            </div>
+            <label>Near<br><span id="forceNearValue">6</span></label>
+          </div>
+          
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="forceMid" min="0.01" max="0.2" step="0.01" value="0.05" orient="vertical">
+            </div>
+            <label>Mid<br><span id="forceMidValue">0.05</span></label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <h3>Movement</h3>
+        <div class="knob-row">
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="textSpread" min="0" max="1" step="0.01" value="0" orient="vertical">
+            </div>
+            <label>Spread<br><span id="textSpreadValue">0</span></label>
+          </div>
+          
+          <div class="knob-container">
+            <div class="knob">
+              <input type="range" id="moveForce" min="0.01" max="0.2" step="0.01" value="0.05" orient="vertical">
+            </div>
+            <label>Speed<br><span id="moveForceValue">0.05</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="sketch.js"></script>
+</body>
 </html>
