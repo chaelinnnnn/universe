@@ -41,8 +41,8 @@ function setupSaveButton() {
   btn.textContent = 'Save SVG';
   btn.style.cssText = `
     position: fixed;
-    bottom: 25px;
-    right: 25px;
+    top: 20px;
+    left: 20px;
     background: #fff;
     color: #000;
     border: none;
@@ -60,8 +60,8 @@ function setupSaveButton() {
 
 function saveSVG() {
   let svgParts = [];
-  svgParts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`);
-  svgParts.push(`<rect width="${width}" height="${height}" fill="rgb(30,30,30)"/>`);
+  svgParts.push('<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '">');
+  svgParts.push('<rect width="' + width + '" height="' + height + '" fill="rgb(30,30,30)"/>');
 
   for (let p of particles) {
     let r, g, b, size;
@@ -76,10 +76,10 @@ function saveSVG() {
       b = settings.colorB.b;
       size = guiSettings.sizeLarge / 2;
     }
-    svgParts.push(`<circle cx="${p.pos.x.toFixed(2)}" cy="${p.pos.y.toFixed(2)}" r="${size}" fill="rgb(${r},${g},${b})"/>`);
+    svgParts.push('<circle cx="' + p.pos.x.toFixed(2) + '" cy="' + p.pos.y.toFixed(2) + '" r="' + size + '" fill="rgb(' + r + ',' + g + ',' + b + ')"/>');
   }
 
-  svgParts.push(`</svg>`);
+  svgParts.push('</svg>');
 
   let blob = new Blob([svgParts.join('\n')], { type: 'image/svg+xml' });
   let url = URL.createObjectURL(blob);
