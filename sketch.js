@@ -31,23 +31,40 @@ function setup() {
   textAlign(CENTER, CENTER);
   
   setupCustomGUI();
-  
+  generateParticles();
+}
+
+function generateParticles() {
+  particles = [];
+
   let stencil = createGraphics(width, height);
   stencil.pixelDensity(1);
   stencil.textFont(font);
   stencil.textAlign(CENTER, CENTER);
-  stencil.textSize(60);
+  stencil.noStroke();
   stencil.clear();
   stencil.fill(255);
-  stencil.noStroke();
-  
-  let yOffset = height / 2 - 60;
-  for (let i = 0; i < lines.length; i++) {
-    stencil.text(lines[i], width / 2, yOffset + i * 120);
+
+  // 캔버스 너비 90%에 맞게 폰트 사이즈 자동 조절
+  let fontSize = 100;
+  stencil.textSize(fontSize);
+  let maxLineWidth = Math.max(...lines.map(l => stencil.textWidth(l)));
+  while (maxLineWidth > width * 0.9 && fontSize > 10) {
+    fontSize -= 2;
+    stencil.textSize(fontSize);
+    maxLineWidth = Math.max(...lines.map(l => stencil.textWidth(l)));
   }
-  
+
+  let lineHeight = fontSize * 1.6;
+  let totalHeight = lines.length * lineHeight;
+  let startY = (height - totalHeight) / 2 + lineHeight / 2;
+
+  for (let i = 0; i < lines.length; i++) {
+    stencil.text(lines[i], width / 2, startY + i * lineHeight);
+  }
+
   stencil.loadPixels();
-  
+
   while (particles.length < 6000) {
     let x = floor(random(width));
     let y = floor(random(height));
@@ -56,6 +73,19 @@ function setup() {
       particles.push(new Particle(x, y));
     }
   }
+}
+
+function draw() {
+  background(30);
+  for (let p of particles) {
+    p.update();
+    p.show();
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth - 250, windowHeight);
+  generateParticles();
 }
 
 function setupCustomGUI() {
@@ -98,18 +128,6 @@ function setupCustomGUI() {
     guiSettings.moveForce = val;
   });
   document.getElementById('moveForce').dataset.initial = 0.05;
-}
-
-function draw() {
-  background(30);
-  for (let p of particles) {
-    p.update();
-    p.show();
-  }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth - 250, windowHeight);
 }
 
 class Particle {
