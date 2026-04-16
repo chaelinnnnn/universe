@@ -31,7 +31,69 @@ function setup() {
   textAlign(CENTER, CENTER);
   
   setupCustomGUI();
+  setupSaveButton();
   generateParticles();
+}
+
+function setupSaveButton() {
+  let btn = document.createElement('button');
+  btn.id = 'saveSvgBtn';
+  btn.textContent = 'Save SVG';
+  btn.style.cssText = `
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    z-index: 999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  `;
+  btn.addEventListener('click', saveSVG);
+  document.body.appendChild(btn);
+}
+
+function saveSVG() {
+  let svgParts = [];
+  svgParts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`);
+  svgParts.push(`<rect width="${width}" height="${height}" fill="rgb(30,30,30)"/>`);
+
+  for (let p of particles) {
+    let r, g, b, size;
+    if (p.sizeType === "small") {
+      r = settings.colorA.r;
+      g = settings.colorA.g;
+      b = settings.colorA.b;
+      size = guiSettings.sizeSmall / 2;
+    } else {
+      r = settings.colorB.r;
+      g = settings.colorB.g;
+      b = settings.colorB.b;
+      size = guiSettings.sizeLarge / 2;
+    }
+    svgParts.push(`<circle cx="${p.pos.x.toFixed(2)}" cy="${p.pos.y.toFixed(2)}" r="${size}" fill="rgb(${r},${g},${b})"/>`);
+  }
+
+  svgParts.push(`</svg>`);
+
+  let blob = new Blob([svgParts.join('\n')], { type: 'image/svg+xml' });
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a');
+  a.href = url;
+  a.download = 'particle-text.svg';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function keyPressed() {
+  if (key === 's' || key === 'S') {
+    saveSVG();
+  }
 }
 
 function generateParticles() {
@@ -45,7 +107,6 @@ function generateParticles() {
   stencil.clear();
   stencil.fill(255);
 
-  // 캔버스 너비 90%에 맞게 폰트 사이즈 자동 조절
   let fontSize = 100;
   stencil.textSize(fontSize);
   let maxLineWidth = Math.max(...lines.map(l => stencil.textWidth(l)));
